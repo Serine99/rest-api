@@ -1,48 +1,73 @@
-import { v4 as uuidv4 } from "uuid";
+// import { v4 as uuidv4 } from "uuid";
+import User from "../schemas/userSchema.js";
 
-let users = [];
+// let users = [];
 
-export const getUsersController = (req, res) => {
+export async function getUsersController(req, res) {
   // console.log(users);
-  res.send(users);
-};
-export const CreateUserController = (req, res) => {
+  // res.send(users);
+  const users = await User.find();
+  return res.send({
+    data: users,
+  });
+}
+export async function CreateUserController(req, res) {
   const user = req.body;
-
-  const userId = uuidv4();
-  const userWithId = { ...user, id: userId };
-  users.push(userWithId);
+  // const userId = uuidv4();
+  // const userWithId = { ...user, id: userId };
+  // users.push(userWithId);
+  const savedUser = await User.create(user);
   // console.log(req.body);
-  res.send(`User with the name ${user.firstName} added to the Database`);
-};
+  return res.status(201).send({
+    data: savedUser,
+  });
+}
 
-export const getUserController = (req, res) => {
+export async function getUserController(req, res) {
   // console.log(req.params);
   const { id } = req.params;
   const foundUser = users.find((user) => user.id === id);
   res.send(foundUser);
-};
+}
 
-export const deleteUserController = (req, res) => {
-  const { id } = req.params;
-  users = users.filter((user) => user.id !== id);
-  res.send(`User with the id ${id} was deleted from the Database`);
-};
+export async function deleteUserController(req, res) {
+  // const { id } = req.params;
+  // users = users.filter((user) => user.id !== id);
+  // res.send(`User with the id ${id} was deleted from the Database`);
 
-export const updateUserController = (req, res) => {
-  const { id } = req.params;
-  const { firstName, lastName, age } = req.body;
-  const user = users.find((user) => user.id === id);
+  const requestQuery = req.query;
+  const deletedUser = await User.deleteOne({
+    _id: requestQuery._id,
+  });
+  console.log(deletedUser);
+  return res.status(204).send(deletedUser);
+}
 
-  if (firstName) {
-    user.firstName = firstName;
-  }
+export async function updateUserController  (req, res)  {
+  // const { id } = req.params;
+  // const { firstName, lastName, age } = req.body;
+  // const user = users.find((user) => user.id === id);
 
-  if (lastName) {
-    user.lastName = lastName;
-  }
-  if (age) {
-    user.age = age;
-  }
-  res.send(`User with the id ${id} has been updated`);
+  // if (firstName) {
+  //   user.firstName = firstName;
+  // }
+
+  // if (lastName) {
+  //   user.lastName = lastName;
+  // }
+  // if (age) {
+  //   user.age = age;
+  // }
+  // res.send(`User with the id ${id} has been updated`);
+
+  const requestQuery = req.query;
+  const requestBody = req.body;
+  const modifiedUser = await User.updateOne({
+    _id: requestQuery._id,
+  } ,{
+    age:28
+  });
+  console.log(deletedUser);
+  return res.status(204).send({message: "user is modified"});
+
 };

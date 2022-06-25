@@ -1,6 +1,6 @@
-import mangoose from "mangoose";
+import mongoose from "mongoose";
 
-const { Schema } = mangoose;
+const { Schema } = mongoose;
 const UserSchema = new Schema({
   firstName: {
     type: String,
@@ -18,4 +18,9 @@ const UserSchema = new Schema({
     type: Date,
     default: Date.now,
   },
+  userId: {
+    type: String,
+  },
 });
+const User = mongoose.model("User", UserSchema);
+export default User;

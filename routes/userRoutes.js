@@ -14,10 +14,10 @@ router.get("/", getUsersController);
 
 router.post("/", CreateUserController);
 
-router.get("/:id", getUserController);
+router.get("/", getUserController);
 
-router.delete("/:id", deleteUserController);
+router.delete("/", deleteUserController);
 
-router.put("/:id", updateUserController);
+router.put("/", updateUserController);
 
 export default router;
